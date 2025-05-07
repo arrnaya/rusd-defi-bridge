@@ -1,17 +1,6 @@
 [
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_localMediator",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_remoteBridge",
-				"type": "address"
-			}
-		],
+		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	},
@@ -393,6 +382,37 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "initialized",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_remoteBridge",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_localMediator",
+				"type": "address"
+			}
+		],
+		"name": "intializeAddresses",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

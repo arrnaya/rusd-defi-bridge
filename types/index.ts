@@ -1,8 +1,21 @@
-export interface Chain {
-    id: number;
+export interface Chains {
+  id: number;
+  name: string;
+  logo: string;
+  network: string;
+  nativeCurrency: {
     name: string;
-    logo: string;
-  }
+    symbol: string;
+    decimals: number;
+  };
+  rpcUrls: {
+    default: { http: string[] };
+    public: { http: string[] };
+  };
+  blockExplorers: {
+    default: { name: string; url: string };
+  };
+}
   
   export interface Token {
     address: `0x${string}`;

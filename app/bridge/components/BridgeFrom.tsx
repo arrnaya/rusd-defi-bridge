@@ -15,14 +15,14 @@ import {
   Tooltip,
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { useAccount, useContractWrite, useBalance, useConnect, useWriteContract, injected } from 'wagmi';
+import { useAccount, useBalance, useConnect, useWriteContract, injected } from 'wagmi';
 import { parseUnits } from 'viem';
 import ChainSelector from './ChainSelector';
 import TokenSelector from './TokenSelector';
 import { CHAINS, TOKEN_BRIDGE_ADDRESSES, TOKENS } from '../../../lib/constants';
 import TokenBridgeABI from '../../../contracts/TokenBridge.json';
 import { ethers } from 'ethers';
-import { Address } from 'viem';
+import { Address, isAddress } from 'viem';
 
 export default function BridgeForm() {
   const { address, isConnected } = useAccount();
@@ -36,12 +36,16 @@ export default function BridgeForm() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const supportedChainIds = [56, 97, 7862, 7863]; // Chain IDs configured in wagmi
+  const isValidInputs = address && isAddress(token.address) && fromChain.id && supportedChainIds.includes(fromChain.id);
+
   const { data: balance, isLoading: balanceLoading, error: balanceError } = useBalance({
     address,
     token: token.address,
     chainId: fromChain.id,
     query: {
-      staleTime: 30_000, // Cache balance for 30 seconds
+      enabled: !!isValidInputs,
+      staleTime: 30_000,
     },
   });
 
@@ -57,7 +61,7 @@ export default function BridgeForm() {
   }, [connect]);
 
   const handleSwitchChains = () => {
-    setError(null); // Clear any existing errors
+    setError(null);
     const tempChain = fromChain;
     setFromChain(toChain);
     setToChain(tempChain);
@@ -72,12 +76,16 @@ export default function BridgeForm() {
       setError('Please enter a valid amount');
       return;
     }
-    if (!recipient) {
-      setError('Please enter a recipient address');
+    if (!recipient || !isAddress(recipient)) {
+      setError('Please enter a valid recipient address');
       return;
     }
     if (fromChain.id === toChain.id) {
       setError('Source and destination chains cannot be the same');
+      return;
+    }
+    if (!supportedChainIds.includes(fromChain.id)) {
+      setError('Selected source chain is not supported');
       return;
     }
     if (balance && parseUnits(amount, token.decimals) > balance.value) {
@@ -94,7 +102,7 @@ export default function BridgeForm() {
         abi: TokenBridgeABI,
         address: TOKEN_BRIDGE_ADDRESSES[fromChain.id],
         functionName: 'transferToken',
-        args: [recipient as Address, token.address, amountInWei],
+        args: [token.address, recipient as Address, amountInWei],
       });
       setAmount('');
       setRecipient('');
@@ -157,10 +165,10 @@ export default function BridgeForm() {
               balanceLoading
                 ? 'Loading balance...'
                 : balanceError
-                ? 'Error fetching balance'
-                : balance
-                ? `Balance: ${ethers.formatUnits(balance.value, token.decimals)} ${token.symbol}`
-                : 'Balance unavailable'
+                  ? `Error fetching balance: ${balanceError.message}`
+                  : balance
+                    ? `Balance: ${ethers.formatUnits(balance.value, token.decimals)} ${token.symbol}`
+                    : 'Balance unavailable'
             }
             error={!!balanceError}
           />
@@ -169,6 +177,8 @@ export default function BridgeForm() {
             value={recipient}
             onChange={(e) => setRecipient(e.target.value)}
             fullWidth
+            error={recipient !== '' && !isAddress(recipient)}
+            helperText={recipient !== '' && !isAddress(recipient) ? 'Invalid address' : ''}
           />
           {error && <Alert severity="error">{error}</Alert>}
           {connectError && <Alert severity="error">{connectError.message}</Alert>}

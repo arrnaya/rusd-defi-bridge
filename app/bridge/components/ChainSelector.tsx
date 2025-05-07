@@ -1,10 +1,11 @@
 import { FormControl, InputLabel, Select, MenuItem, Box } from '@mui/material';
-import { CHAINS, Chain } from '../../../lib/constants';
+import { CHAINS } from '../../../lib/constants';
+import { Chains } from '@/types';
 
 interface ChainSelectorProps {
   label: string;
-  selectedChain: Chain;
-  onChange: (chain: Chain) => void;
+  selectedChain: Chains;
+  onChange: (chain: Chains) => void;
   disabledChains?: number[];
 }
 

@@ -19,11 +19,13 @@ contract Bridge is ReentrancyGuard, AccessControl, Pausable {
     bytes32 public constant EMERGENCY_ROLE = keccak256("EMERGENCY_ROLE");
 
     // Address of the TokenBridge mediator on the current chain
-    address public immutable localMediator;
+    address public localMediator;
     // Address of the Bridge contract on the remote chain
-    address public immutable remoteBridge;
+    address public remoteBridge;
     // Nonce to prevent message replay attacks
     uint256 private nonce;
+    // Checks the status of addresses set and intialization
+    bool public initialized;
     // Mapping of message ID to processed status
     mapping(bytes32 => bool) private processedMessages;
     // Mapping of message ID to sender address
@@ -57,21 +59,27 @@ contract Bridge is ReentrancyGuard, AccessControl, Pausable {
 
     /**
      * @dev Constructor to initialize the bridge contract.
-     * @param _localMediator Address of the TokenBridge mediator on the current chain.
-     * @param _remoteBridge Address of the Bridge contract on the remote chain.
      */
-    constructor(address _localMediator, address _remoteBridge) {
-        if (_localMediator == address(0) || _remoteBridge == address(0))
-            revert InvalidAddress();
-
-        localMediator = _localMediator;
-        remoteBridge = _remoteBridge;
+    constructor() {
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(RELAYER_ROLE, msg.sender);
         _grantRole(EMERGENCY_ROLE, msg.sender);
 
         nonce = 0;
+    }
+
+    function intializeAddresses(
+        address _remoteBridge,
+        address _localMediator
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(!initialized, "Already initialized");
+        if (_remoteBridge == address(0) || _localMediator == address(0)) revert InvalidAddress();
+
+        remoteBridge = _remoteBridge;
+        localMediator = _localMediator;
+
+        initialized = true;
     }
 
     /**
@@ -86,6 +94,7 @@ contract Bridge is ReentrancyGuard, AccessControl, Pausable {
         bytes calldata _data,
         uint256 /* _gasLimit */
     ) external whenNotPaused nonReentrant returns (bytes32) {
+        require(initialized, "Contract not initialized");
         if (msg.sender != localMediator) revert UnauthorizedCaller();
         if (_target == address(0)) revert InvalidAddress();
         // Note: _target is expected to be the remoteMediator, validated off-chain by relayers
@@ -116,6 +125,7 @@ contract Bridge is ReentrancyGuard, AccessControl, Pausable {
         address _target,
         bytes calldata _data
     ) external whenNotPaused nonReentrant onlyRole(RELAYER_ROLE) {
+        require(initialized, "Contract not initialized");
         if (_sender != remoteBridge) revert InvalidMessageSender();
         if (_target != localMediator) revert InvalidTarget();
         if (processedMessages[_messageId])

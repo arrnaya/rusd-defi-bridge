@@ -40,14 +40,16 @@ contract TokenBridge is ReentrancyGuard, AccessControl, Pausable {
     bytes32 public constant EMERGENCY_ROLE = keccak256("EMERGENCY_ROLE");
 
     // Bridge contract on the current chain
-    IBridge public immutable bridgeContract;
+    IBridge public bridgeContract;
     // Mediator contract address on the destination chain
-    address public immutable remoteMediator;
+    address public remoteMediator;
     // Gas limit for cross-chain message passing
     uint256 public requestGasLimit;
 
     // Nonce to prevent message replay attacks
     uint256 private nonce;
+    // Checks the status of addresses set and intialization
+    bool public initialized;
     // Mapping of local token to remote token addresses
     mapping(address => address) private tokenMapping;
     // Mapping of message ID to message details
@@ -110,29 +112,27 @@ contract TokenBridge is ReentrancyGuard, AccessControl, Pausable {
     );
     error MessageNotFound(bytes32 messageId);
 
-    /**
-     * @dev Constructor to initialize the bridge contract.
-     * @param _bridgeContract Address of the bridge contract on the current chain.
-     * @param _remoteMediator Address of the mediator contract on the destination chain.
-     * @param _requestGasLimit Gas limit for cross-chain message passing.
-     */
-    constructor(
-        address _bridgeContract,
-        address _remoteMediator,
-        uint256 _requestGasLimit
-    ) {
-        if (_bridgeContract == address(0) || _remoteMediator == address(0))
-            revert InvalidAddress();
-
-        bridgeContract = IBridge(_bridgeContract);
-        remoteMediator = _remoteMediator;
-        requestGasLimit = _requestGasLimit;
-
+    constructor() {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(OPERATOR_ROLE, msg.sender);
         _grantRole(EMERGENCY_ROLE, msg.sender);
 
         nonce = 0;
+        requestGasLimit = 800000;
+    }
+
+    function intializeAddresses(
+        address _bridgeContract,
+        address _remoteMediator
+    ) external onlyRole(OPERATOR_ROLE) {
+        require(!initialized, "Already initialized");
+        if (_bridgeContract == address(0) || _remoteMediator == address(0))
+            revert InvalidAddress();
+
+        bridgeContract = IBridge(_bridgeContract);
+        remoteMediator = _remoteMediator;
+
+        initialized = true;
     }
 
     /**
@@ -146,6 +146,7 @@ contract TokenBridge is ReentrancyGuard, AccessControl, Pausable {
         address _tokenAddress,
         uint256 _value
     ) external whenNotPaused nonReentrant {
+        require(initialized, "Contract not initialized");
         if (_recipient == address(0) || _tokenAddress == address(0))
             revert InvalidAddress();
         if (_value == 0) revert InvalidAddress();
@@ -210,6 +211,7 @@ contract TokenBridge is ReentrancyGuard, AccessControl, Pausable {
         uint256 _value,
         uint256 _nonce
     ) external whenNotPaused nonReentrant {
+        require(initialized, "Contract not initialized");
         if (msg.sender != address(bridgeContract)) revert UnauthorizedCaller();
         if (bridgeContract.messageSender() != remoteMediator)
             revert InvalidMessageSender();
@@ -244,11 +246,10 @@ contract TokenBridge is ReentrancyGuard, AccessControl, Pausable {
      * @dev Fixes a failed message by unlocking tokens on the current chain.
      * @param _messageId ID of the failed message.
      */
-    function fixFailedMessage(bytes32 _messageId)
-        external
-        whenNotPaused
-        nonReentrant
-    {
+    function fixFailedMessage(
+        bytes32 _messageId
+    ) external whenNotPaused nonReentrant {
+        require(initialized, "Contract not initialized");
         if (msg.sender != address(bridgeContract)) revert UnauthorizedCaller();
         if (bridgeContract.messageSender() != remoteMediator)
             revert InvalidMessageSender();
@@ -278,10 +279,11 @@ contract TokenBridge is ReentrancyGuard, AccessControl, Pausable {
      * @param _localToken Address of the token on the current chain.
      * @param _remoteToken Address of the token on the destination chain.
      */
-    function setTokenMapping(address _localToken, address _remoteToken)
-        external
-        onlyRole(OPERATOR_ROLE)
-    {
+    function setTokenMapping(
+        address _localToken,
+        address _remoteToken
+    ) external onlyRole(OPERATOR_ROLE) {
+        require(initialized, "Contract not initialized");
         if (_localToken == address(0) || _remoteToken == address(0))
             revert InvalidAddress();
         tokenMapping[_localToken] = _remoteToken;
@@ -292,10 +294,9 @@ contract TokenBridge is ReentrancyGuard, AccessControl, Pausable {
      * @dev Updates the gas limit for cross-chain message passing.
      * @param _newGasLimit New gas limit.
      */
-    function setRequestGasLimit(uint256 _newGasLimit)
-        external
-        onlyRole(OPERATOR_ROLE)
-    {
+    function setRequestGasLimit(
+        uint256 _newGasLimit
+    ) external onlyRole(OPERATOR_ROLE) {
         if (_newGasLimit == 0) revert InvalidAddress();
         emit RequestGasLimitUpdated(requestGasLimit, _newGasLimit);
         requestGasLimit = _newGasLimit;
@@ -306,11 +307,10 @@ contract TokenBridge is ReentrancyGuard, AccessControl, Pausable {
      * @param _token Address of the token to claim.
      * @param _to Address to send the tokens to.
      */
-    function claimTokens(address _token, address _to)
-        external
-        onlyRole(DEFAULT_ADMIN_ROLE)
-        nonReentrant
-    {
+    function claimTokens(
+        address _token,
+        address _to
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) nonReentrant {
         if (_to == address(0)) revert InvalidAddress();
         IERC20 token = IERC20(_token);
         uint256 balance = token.balanceOf(address(this));
@@ -339,11 +339,9 @@ contract TokenBridge is ReentrancyGuard, AccessControl, Pausable {
      * @param _localToken Address of the local token.
      * @return Address of the remote token.
      */
-    function getTokenMapping(address _localToken)
-        external
-        view
-        returns (address)
-    {
+    function getTokenMapping(
+        address _localToken
+    ) external view returns (address) {
         return tokenMapping[_localToken];
     }
 
@@ -352,11 +350,9 @@ contract TokenBridge is ReentrancyGuard, AccessControl, Pausable {
      * @param _messageId ID of the message.
      * @return Message struct containing recipient, token address, value, and nonce.
      */
-    function getMessage(bytes32 _messageId)
-        external
-        view
-        returns (Message memory)
-    {
+    function getMessage(
+        bytes32 _messageId
+    ) external view returns (Message memory) {
         return messages[_messageId];
     }
 

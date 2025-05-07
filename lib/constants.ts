@@ -1,12 +1,12 @@
-import { Token } from '@/types';
+import { Chains, Token } from '@/types';
 import { Address } from 'viem';
 
-export const CHAINS = [
+export const CHAINS: Chains[] = [
     {
-        id: 7863, 
-        name: 'MaalChain', 
-        logo: '/chains/maalchain.avif', 
-        network: 'maalchain',
+        id: 7863,
+        name: 'MaalChain Testnet',
+        logo: '/chains/maalchain.avif',
+        network: 'maalchain-testnet',
         nativeCurrency: { name: 'Maal', symbol: 'MAAL', decimals: 18 },
         rpcUrls: {
             default: { http: ['https://node2-testnet.maalscan.io'] },
@@ -16,31 +16,59 @@ export const CHAINS = [
             default: { name: 'MaalScan', url: 'https://new-testnet.maalscan.io/' },
         },
     },
-    { 
-        id: 97, 
-        name: 'BSC Testnet Chain', 
+    {
+        id: 97,
+        name: 'BSC Testnet',
+        logo: '/chains/binance.webp',
+        network: 'bsc-testnet',
+        nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+        rpcUrls: {
+            default: { http: ['https://data-seed-prebsc-2-s1.bnbchain.org:8545/'] },
+            public: { http: ['https://data-seed-prebsc-1-s1.binance.org:8545/'] },
+        },
+        blockExplorers: {
+            default: { name: 'BscScan', url: 'https://testnet.bscscan.com' },
+        },
+    },
+    {
+        id: 7862,
+        name: 'MaalChain V2',
+        logo: '/chains/maalchain.avif',
+        network: 'maalchain-v2',
+        nativeCurrency: { name: 'Maal', symbol: 'MAAL', decimals: 18 },
+        rpcUrls: {
+            default: { http: ['https://node1-mainnet-new.maalscan.io'] },
+            public: { http: ['https://node1-mainnet-new.maalscan.io'] },
+        },
+        blockExplorers: {
+            default: { name: 'MaalScan', url: 'https://v2.maalscan.io/' },
+        },
+    },
+    {
+        id: 56,
+        name: 'BSC Mainnet',
         logo: '/chains/binance.webp',
         network: 'bsc',
         nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
         rpcUrls: {
-          default: { http: ['https://bsc-dataseed.binance.org/'] },
-          public: { http: ['https://bsc-dataseed.binance.org/'] },
+            default: { http: ['https://bsc-pokt.nodies.app/'] },
+            public: { http: ['https://bsc-dataseed1.binance.org/'] },
         },
         blockExplorers: {
-          default: { name: 'BscScan', url: 'https://bscscan.com' },
+            default: { name: 'BscScan', url: 'https://bscscan.com' },
         },
-      },
-    ];
+    },
+];
 
 export const TOKENS: Token[] = [
     {
-        address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48' as Address, // USDC on Ethereum
-        symbol: 'USDT',
-        name: 'USD Tether',
+        address: '0x7Ce29FdAd93890d20dD5a168f88c9442559112cd' as Address,
+        symbol: 'GCS',
+        name: 'GCS',
         decimals: 18,
     },
     {
-        address: '0x6B175474E89094C44Da98b954EedeAC495271d0F' as Address, // DAI on Ethereum
+        address: '0xaCcfdB7767ddcF5f088ec9B8d726A76b29BAB768' as Address,
         symbol: 'RUSD',
         name: 'Royal Dollar',
         decimals: 18,
@@ -48,6 +76,8 @@ export const TOKENS: Token[] = [
 ];
 
 export const TOKEN_BRIDGE_ADDRESSES: Record<number, Address> = {
+    56: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_A_MAIN! as Address,
     97: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_A! as Address,
     7863: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_B! as Address,
+    7862: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_B_MAIN! as Address,
 };
