@@ -62,16 +62,32 @@ export const CHAINS: Chains[] = [
 
 export const TOKENS: Token[] = [
     {
-        address: '0x7Ce29FdAd93890d20dD5a168f88c9442559112cd' as Address,
-        symbol: 'GCS',
-        name: 'GCS',
+        address: '0x604756016db44ad0a38d2787B8e2E3563b03Ab4e' as Address,
+        symbol: 'RUSD',
+        name: 'Royal Dollar',
         decimals: 18,
+        chainId: 97,
     },
     {
         address: '0xaCcfdB7767ddcF5f088ec9B8d726A76b29BAB768' as Address,
         symbol: 'RUSD',
         name: 'Royal Dollar',
         decimals: 18,
+        chainId: 7863,
+    },
+    {
+        address: '0x6b3b95B0c84f35c9c505fff8C2F35Ee2e502a44D' as Address,
+        symbol: 'RUSD',
+        name: 'Royal Dollar',
+        decimals: 18,
+        chainId: 56, // BSC Mainnet
+    },
+    {
+        address: '0x49561Eb00e1E2Ff7a3E2a7c9664cEAa2Ce365a10' as Address,
+        symbol: 'RUSD',
+        name: 'Royal Dollar',
+        decimals: 18,
+        chainId: 7862, // MaalChain V2
     },
 ];
 
@@ -81,3 +97,13 @@ export const TOKEN_BRIDGE_ADDRESSES: Record<number, Address> = {
     7863: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_B! as Address,
     7862: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_B_MAIN! as Address,
 };
+
+// Validate environment variables
+if (
+    !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_A ||
+    !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_A_MAIN ||
+    !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_B ||
+    !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_B_MAIN
+) {
+    console.warn('Missing TokenBridge contract addresses in environment variables');
+}

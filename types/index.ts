@@ -22,6 +22,7 @@ export interface Chains {
     symbol: string;
     name: string;
     decimals: number;
+    chainId: number;
   }
   
   export interface Transaction {

@@ -10,7 +10,7 @@ export default function BridgePage() {
     <WagmiConfigProvider>
       <Container maxWidth="md" sx={{ py: 4 }}>
         <Typography variant="h4" gutterBottom align="center">
-          Cross-Chain Token Bridge
+          Cross-Chain RUSD Bridge
         </Typography>
         <Box sx={{ mt: 4 }}>
           <BridgeForm />
