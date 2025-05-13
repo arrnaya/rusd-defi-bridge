@@ -17,10 +17,10 @@ const maalChainTestnet: Chain = {
   },
   rpcUrls: {
     default: {
-      http: ['https://node2-testnet.maalscan.io'],
+      http: ['https://node-testnet.maalscan.io'],
     },
     public: {
-      http: ['https://node2-testnet.maalscan.io'],
+      http: ['https://node-testnet.maalscan.io'],
     },
   },
   blockExplorers: {
@@ -57,15 +57,42 @@ const maalChainV2: Chain = {
   },
 } as const;
 
+// Define Holesky
+const holesky: Chain = {
+  id: 17000,
+  name: 'Holesky Testnet',
+  network: 'holesky',
+  nativeCurrency: {
+    name: 'ETH',
+    symbol: 'ETH',
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://node1-mainnet-new.maalscan.io'],
+    },
+    public: {
+      http: ['https://1rpc.io/holesky'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Holesky-scan',
+      url: 'https://holesky.etherscan.io/',
+    },
+  },
+} as const;
+
 // Create wagmi config
 export const wagmiConfig = createConfig({
-  chains: [bsc, bscTestnet, maalChainTestnet, maalChainV2],
+  chains: [bsc, bscTestnet, holesky, maalChainTestnet, maalChainV2],
   connectors: [injected({ target: 'metaMask' })],
   transports: {
     [bsc.id]: http('https://bsc-dataseed1.binance.org/'),
     [bscTestnet.id]: http('https://data-seed-prebsc-1-s1.binance.org:8545/'),
-    [maalChainTestnet.id]: http('https://node2-testnet.maalscan.io'),
-    [maalChainV2.id]: http('https://node1-mainnet-new.maalscan.io'),
+    [holesky.id]: http('https://holesky.gateway.tenderly.co/'),
+    [maalChainTestnet.id]: http('https://node-testnet.maalscan.io/'),
+    [maalChainV2.id]: http('https://node1-mainnet-new.maalscan.io/'),
   },
 });
 

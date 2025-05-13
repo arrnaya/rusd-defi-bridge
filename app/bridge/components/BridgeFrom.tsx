@@ -15,12 +15,13 @@ import {
   Tooltip,
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { useAccount, useBalance, useConnect, useWriteContract, useSwitchChain, useChainId, useWalletClient } from 'wagmi';
+import { useAccount, useBalance, useConnect, useReadContract, useWriteContract, useSwitchChain, useChainId, useWalletClient } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 import { parseUnits, isAddress } from 'viem';
 import ChainSelector from './ChainSelector';
 import { CHAINS, TOKEN_BRIDGE_ADDRESSES, TOKENS } from '../../../lib/constants';
 import TokenBridgeABI from '../../../contracts/TokenBridge.json';
+import ERC20ABI from '../../../contracts/ERC20ABI.json';
 import { ethers } from 'ethers';
 import { Address } from 'viem';
 
@@ -38,6 +39,7 @@ export default function BridgeForm() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [needsChainAdd, setNeedsChainAdd] = useState(false);
+  const [needsApproval, setNeedsApproval] = useState(false);
 
   // Select RUSD token for the current fromChain
   const token = TOKENS.find(t => t.chainId === fromChain.id);
@@ -50,6 +52,19 @@ export default function BridgeForm() {
     chainId: fromChain.id,
     query: {
       enabled: !!isValidInputs,
+      staleTime: 30_000,
+    },
+  });
+
+  // Check allowance for TokenBridge contract
+  const { data: allowance, refetch: refetchAllowance } = useReadContract({
+    address: token?.address as Address,
+    abi: ERC20ABI,
+    functionName: 'allowance',
+    args: [address, TOKEN_BRIDGE_ADDRESSES[fromChain.id] as Address],
+    chainId: fromChain.id,
+    query: {
+      enabled: !!isValidInputs && !!address && isConnected && !!token,
       staleTime: 30_000,
     },
   });
@@ -175,11 +190,26 @@ export default function BridgeForm() {
 
     try {
       const amountInWei = parseUnits(amount, token.decimals);
+
+      // Check if approval is needed
+      if (!allowance || BigInt(Number(allowance)) < amountInWei) {
+        setNeedsApproval(true);
+        await approveToken({
+          abi: ERC20ABI,
+          address: token.address as Address,
+          functionName: 'approve',
+          args: [TOKEN_BRIDGE_ADDRESSES[fromChain.id] as Address, amountInWei],
+        });
+        setSuccessMessage('Approval successful! Proceeding with transfer...');
+        // Wait for allowance to update (optional, depending on wallet/network)
+        await refetchAllowance();
+      }
+
       await transferToken({
         abi: TokenBridgeABI,
         address: TOKEN_BRIDGE_ADDRESSES[fromChain.id],
         functionName: 'transferToken',
-        args: [token.address, recipient as Address, amountInWei],
+        args: [recipient as Address, token.address, amountInWei],
       });
       setAmount('');
       setRecipient('');
@@ -193,6 +223,7 @@ export default function BridgeForm() {
   };
 
   const { writeContractAsync: transferToken } = useWriteContract();
+  const { writeContractAsync: approveToken } = useWriteContract();
 
   return (
     <Card>
@@ -245,12 +276,12 @@ export default function BridgeForm() {
               balanceLoading
                 ? 'Loading balance...'
                 : balanceError
-                ? `Error fetching balance: ${balanceError.message}`
-                : balance && token
-                ? `Balance: ${ethers.formatUnits(balance.value, token.decimals)} RUSD`
-                : !isValidInputs
-                ? 'Connect wallet to view balance'
-                : 'Balance unavailable'
+                  ? `Error fetching balance: ${balanceError.message}`
+                  : balance && token
+                    ? `Balance: ${ethers.formatUnits(balance.value, token.decimals)} RUSD`
+                    : !isValidInputs
+                      ? 'Connect wallet to view balance'
+                      : 'Balance unavailable'
             }
             error={!!balanceError}
           />
