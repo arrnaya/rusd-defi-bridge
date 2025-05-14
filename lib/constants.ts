@@ -82,20 +82,20 @@ export const TOKENS: Token[] = [
         decimals: 18,
         chainId: 97,
     },
-    {
-        address: '0xaCcfdB7767ddcF5f088ec9B8d726A76b29BAB768' as Address,
-        symbol: 'RUSD',
-        name: 'Royal Dollar',
-        decimals: 18,
-        chainId: 7863,
-    },
-    {
-        address: '0x6b3b95B0c84f35c9c505fff8C2F35Ee2e502a44D' as Address,
-        symbol: 'RUSD',
-        name: 'Royal Dollar',
-        decimals: 18,
-        chainId: 56, // BSC Mainnet
-    },
+    // {
+    //     address: '0xaCcfdB7767ddcF5f088ec9B8d726A76b29BAB768' as Address,
+    //     symbol: 'RUSD',
+    //     name: 'Royal Dollar',
+    //     decimals: 18,
+    //     chainId: 7863,
+    // },
+    // {
+    //     address: '0x6b3b95B0c84f35c9c505fff8C2F35Ee2e502a44D' as Address,
+    //     symbol: 'RUSD',
+    //     name: 'Royal Dollar',
+    //     decimals: 18,
+    //     chainId: 56, // BSC Mainnet
+    // },
     {
         address: '0x49561Eb00e1E2Ff7a3E2a7c9664cEAa2Ce365a10' as Address,
         symbol: 'RUSD',
