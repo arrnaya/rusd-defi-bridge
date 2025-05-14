@@ -1,0 +1,132 @@
+{
+	"compiler": {
+		"version": "0.8.17+commit.8df45f5f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentAllowance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "requestedDecrease",
+						"type": "uint256"
+					}
+				],
+				"name": "SafeERC20FailedDecreaseAllowance",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					}
+				],
+				"name": "SafeERC20FailedOperation",
+				"type": "error"
+			}
+		],
+		"devdoc": {
+			"details": "Wrappers around ERC-20 operations that throw on failure (when the token contract returns false). Tokens that return no value (and instead revert or throw on failure) are also supported, non-reverting calls are assumed to be successful. To use this library you can add a `using SafeERC20 for IERC20;` statement to your contract, which allows you to call the safe operations as `token.safeTransfer(...)`, etc.",
+			"errors": {
+				"SafeERC20FailedDecreaseAllowance(address,uint256,uint256)": [
+					{
+						"details": "Indicates a failed `decreaseAllowance` request."
+					}
+				],
+				"SafeERC20FailedOperation(address)": [
+					{
+						"details": "An operation with an ERC-20 token failed."
+					}
+				]
+			},
+			"kind": "dev",
+			"methods": {},
+			"title": "SafeERC20",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"RUSD-Bridge-MaalChain/SafeERC20.sol": "SafeERC20"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"RUSD-Bridge-MaalChain/Address.sol": {
+			"keccak256": "0x11af1067f54637ed0d29e3ad2dbc05deec9b23a6fc162dd4a8b3fbd33781ba57",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://dacc65e26db7d9c2f8b7d1bc75e143ac85fb021a4587eeb0c81e974095b6ef0b",
+				"dweb:/ipfs/QmPgAcAYNeW8D9z49P7VW21Xs94FPoUuMsB1Rt5nqjcg21"
+			]
+		},
+		"RUSD-Bridge-MaalChain/Errors.sol": {
+			"keccak256": "0xccb0653ac1441816f0d77a415f1c07335f2992f25d0e1f9c90c8ada7489970ba",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://023a7cd77cd9c887751ad1790b04cb302f6b556d58a90aeb0753445a92173c8c",
+				"dweb:/ipfs/QmTiZ6sXuYGBodLVaMZ1oVF2PddQ2usNpiQNJHPgVP2MMr"
+			]
+		},
+		"RUSD-Bridge-MaalChain/IERC1363.sol": {
+			"keccak256": "0xf7e43525e899047c7c06f43ab3f9e3180f292a65f79abd5727cacf65dbb3c0b3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://641cbdad4c08e758e54d49e8a310ce5c38be2ae87d5e703116d18b71978cdbb6",
+				"dweb:/ipfs/QmaXVsg9MjXZ9iNRVhf3sUvAXHMXQR4YvjyBc68Uc8BeXt"
+			]
+		},
+		"RUSD-Bridge-MaalChain/IERC165.sol": {
+			"keccak256": "0xe210951fd55bdea7877fe678aca7241a511b5405be2379a127628117e488f569",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b5af04ab6d4a256b5a11a0025132d73564666e4d1a389ea7fced7bf071a08ce1",
+				"dweb:/ipfs/QmQfrUiQPL22Nib3Q12FqJtGhxGq1kCrZyopYNMRENtUtn"
+			]
+		},
+		"RUSD-Bridge-MaalChain/IERC20.sol": {
+			"keccak256": "0x40b023011508dd11d609419d2d68b0a1695afa480dd0a37cd0c4c449e84be028",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a312f5cf92f661c026bc64244e2c1a9b8c9a52e4475b61760acd423a3e061ef1",
+				"dweb:/ipfs/QmZSkkEX2BBBosB6uFivLAwWH6snSpvKWT7hpgfZ3DhoDo"
+			]
+		},
+		"RUSD-Bridge-MaalChain/SafeERC20.sol": {
+			"keccak256": "0xa5468fd7dd662db14cf62a0be22c85af3b0f04692f216a047b67afb4386bc8b1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0de8930815c3b8459d2a5ee4a331fd55e578cef308db3129fd36c605923195a9",
+				"dweb:/ipfs/QmWEqdzvLZXVofnH8a9QHgRXS9cixZsQte8qfD1P4df2BH"
+			]
+		}
+	},
+	"version": 1
+}

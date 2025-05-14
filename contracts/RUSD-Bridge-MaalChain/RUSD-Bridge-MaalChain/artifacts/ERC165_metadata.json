@@ -1,0 +1,78 @@
+{
+	"compiler": {
+		"version": "0.8.17+commit.8df45f5f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "Implementation of the {IERC165} interface. Contracts that want to implement ERC-165 should inherit from this contract and override {supportsInterface} to check for the additional interface id that will be supported. For example: ```solidity function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {     return interfaceId == type(MyInterface).interfaceId || super.supportsInterface(interfaceId); } ```",
+			"kind": "dev",
+			"methods": {
+				"supportsInterface(bytes4)": {
+					"details": "Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[ERC section] to learn more about how these ids are created. This function call must use less than 30 000 gas."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"RUSD-Bridge-MaalChain/ERC165.sol": "ERC165"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"RUSD-Bridge-MaalChain/ERC165.sol": {
+			"keccak256": "0x83e7a6d7614c5d2ca852b77a937f40cdc6832b3c9bf4504607824ca49536bde0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://cc9f9ec4495f7a5f630a7570c0d3795a289e1ffd83f0b47d98aa60d8f1d7f2e1",
+				"dweb:/ipfs/QmWYrJUkeJsYniH9jwt8k4v3XqJ8vkaY7TiTX3fj5hdjVT"
+			]
+		},
+		"RUSD-Bridge-MaalChain/IERC165.sol": {
+			"keccak256": "0xe210951fd55bdea7877fe678aca7241a511b5405be2379a127628117e488f569",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b5af04ab6d4a256b5a11a0025132d73564666e4d1a389ea7fced7bf071a08ce1",
+				"dweb:/ipfs/QmQfrUiQPL22Nib3Q12FqJtGhxGq1kCrZyopYNMRENtUtn"
+			]
+		}
+	},
+	"version": 1
+}

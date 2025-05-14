@@ -1,0 +1,1350 @@
+{
+	"compiler": {
+		"version": "0.8.17+commit.8df45f5f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "AccessControlBadConfirmation",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "neededRole",
+						"type": "bytes32"
+					}
+				],
+				"name": "AccessControlUnauthorizedAccount",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "EnforcedPause",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "ExecutionFailed",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "ExpectedPause",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "required",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "available",
+						"type": "uint256"
+					}
+				],
+				"name": "InsufficientBalance",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidAddress",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidMessageSender",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidTarget",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "messageId",
+						"type": "bytes32"
+					}
+				],
+				"name": "MessageAlreadyFixed",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "messageId",
+						"type": "bytes32"
+					}
+				],
+				"name": "MessageAlreadyProcessed",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "messageId",
+						"type": "bytes32"
+					}
+				],
+				"name": "MessageNotFound",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "NotInitialized",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "ReentrancyGuardReentrantCall",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					}
+				],
+				"name": "SafeERC20FailedOperation",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					}
+				],
+				"name": "TokenNotMapped",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "UnauthorizedCaller",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "messageId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "tokenAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "FailedMessageFixed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "messageId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "success",
+						"type": "bool"
+					}
+				],
+				"name": "MessageProcessed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "messageId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "target",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "nonce",
+						"type": "uint256"
+					}
+				],
+				"name": "MessageReceived",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "messageId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "target",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "nonce",
+						"type": "uint256"
+					}
+				],
+				"name": "MessageSent",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Paused",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "oldRemoteBridge",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "newRemoteBridge",
+						"type": "address"
+					}
+				],
+				"name": "RemoteBridgeUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "oldRemoteMediator",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "newRemoteMediator",
+						"type": "address"
+					}
+				],
+				"name": "RemoteMediatorUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "oldGasLimit",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newGasLimit",
+						"type": "uint256"
+					}
+				],
+				"name": "RequestGasLimitUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "previousAdminRole",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "newAdminRole",
+						"type": "bytes32"
+					}
+				],
+				"name": "RoleAdminChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleGranted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleRevoked",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "localToken",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "remoteToken",
+						"type": "address"
+					}
+				],
+				"name": "TokenMappingUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "TokensClaimed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "messageId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "localToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "remoteToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "nonce",
+						"type": "uint256"
+					}
+				],
+				"name": "TokensLocked",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "messageId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "tokenAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "nonce",
+						"type": "uint256"
+					}
+				],
+				"name": "TokensUnlocked",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Unpaused",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "DEFAULT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "EMERGENCY_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "OPERATOR_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "RELAYER_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_token",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "claimTokens",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_messageId",
+						"type": "bytes32"
+					}
+				],
+				"name": "fixFailedMessage",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_messageId",
+						"type": "bytes32"
+					}
+				],
+				"name": "getMessage",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "recipient",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "tokenAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "value",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "nonce",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct TokenBridge.Message",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRoleAdmin",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_localToken",
+						"type": "address"
+					}
+				],
+				"name": "getTokenMapping",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "grantRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_tokenAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_nonce",
+						"type": "uint256"
+					}
+				],
+				"name": "handleBridgedTokens",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "hasRole",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_remoteTokenBridge",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_localToken",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_remoteToken",
+						"type": "address"
+					}
+				],
+				"name": "initialize",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "initialized",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_messageId",
+						"type": "bytes32"
+					}
+				],
+				"name": "isMessageFixed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_messageId",
+						"type": "bytes32"
+					}
+				],
+				"name": "isMessageProcessed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_messageId",
+						"type": "bytes32"
+					}
+				],
+				"name": "messageSender",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "paused",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_messageId",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "_sender",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_target",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "_data",
+						"type": "bytes"
+					}
+				],
+				"name": "receiveMessage",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "remoteTokenBridge",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "callerConfirmation",
+						"type": "address"
+					}
+				],
+				"name": "renounceRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "requestGasLimit",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "revokeRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_newGasLimit",
+						"type": "uint256"
+					}
+				],
+				"name": "setRequestGasLimit",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_localToken",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_remoteToken",
+						"type": "address"
+					}
+				],
+				"name": "setTokenMapping",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_tokenAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					}
+				],
+				"name": "transferToken",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_newRemoteBridge",
+						"type": "address"
+					}
+				],
+				"name": "updateRemoteBridge",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "A secure cross-chain token bridge for transferring ERC20 tokens between EVM-compatible chains,      with integrated message relaying and robust security measures.",
+			"errors": {
+				"AccessControlBadConfirmation()": [
+					{
+						"details": "The caller of a function is not the expected one. NOTE: Don't confuse with {AccessControlUnauthorizedAccount}."
+					}
+				],
+				"AccessControlUnauthorizedAccount(address,bytes32)": [
+					{
+						"details": "The `account` is missing a role."
+					}
+				],
+				"EnforcedPause()": [
+					{
+						"details": "The operation failed because the contract is paused."
+					}
+				],
+				"ExpectedPause()": [
+					{
+						"details": "The operation failed because the contract is not paused."
+					}
+				],
+				"ReentrancyGuardReentrantCall()": [
+					{
+						"details": "Unauthorized reentrant call."
+					}
+				],
+				"SafeERC20FailedOperation(address)": [
+					{
+						"details": "An operation with an ERC-20 token failed."
+					}
+				]
+			},
+			"kind": "dev",
+			"methods": {
+				"claimTokens(address,address)": {
+					"details": "Emergency token recovery.",
+					"params": {
+						"_to": "Recipient address.",
+						"_token": "Token address."
+					}
+				},
+				"fixFailedMessage(bytes32)": {
+					"details": "Refunds tokens on the source chain for a failed message.",
+					"params": {
+						"_messageId": "ID of the failed message."
+					}
+				},
+				"getRoleAdmin(bytes32)": {
+					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
+				},
+				"grantRole(bytes32,address)": {
+					"details": "Grants `role` to `account`. If `account` had not been already granted `role`, emits a {RoleGranted} event. Requirements: - the caller must have ``role``'s admin role. May emit a {RoleGranted} event."
+				},
+				"handleBridgedTokens(address,address,uint256,uint256)": {
+					"details": "Handles incoming bridged tokens on the destination chain.",
+					"params": {
+						"_nonce": "Message nonce.",
+						"_recipient": "Recipient address.",
+						"_tokenAddress": "Remote token address.",
+						"_value": "Amount of tokens."
+					}
+				},
+				"hasRole(bytes32,address)": {
+					"details": "Returns `true` if `account` has been granted `role`."
+				},
+				"initialize(address,address,address)": {
+					"details": "Initializes the contract with bridge and token mapping parameters.",
+					"params": {
+						"_localToken": "Local token address.",
+						"_remoteToken": "Remote token address.",
+						"_remoteTokenBridge": "Remote bridge contract address."
+					}
+				},
+				"messageSender(bytes32)": {
+					"details": "View functions."
+				},
+				"pause()": {
+					"details": "Pause and unpause functions."
+				},
+				"paused()": {
+					"details": "Returns true if the contract is paused, and false otherwise."
+				},
+				"receiveMessage(bytes32,address,address,bytes)": {
+					"details": "Processes a message from the remote chain.",
+					"params": {
+						"_data": "Encoded data to execute.",
+						"_messageId": "Unique message ID.",
+						"_sender": "Sender address (remote bridge).",
+						"_target": "Target address (this contract)."
+					}
+				},
+				"renounceRole(bytes32,address)": {
+					"details": "Revokes `role` from the calling account. Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced). If the calling account had been revoked `role`, emits a {RoleRevoked} event. Requirements: - the caller must be `callerConfirmation`. May emit a {RoleRevoked} event."
+				},
+				"revokeRole(bytes32,address)": {
+					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role. May emit a {RoleRevoked} event."
+				},
+				"supportsInterface(bytes4)": {
+					"details": "Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[ERC section] to learn more about how these ids are created. This function call must use less than 30 000 gas."
+				},
+				"transferToken(address,address,uint256)": {
+					"details": "Initiates a token transfer to the remote chain.",
+					"params": {
+						"_recipient": "Recipient address on the remote chain.",
+						"_tokenAddress": "Local token address.",
+						"_value": "Amount of tokens to transfer."
+					},
+					"returns": {
+						"_0": "messageId Unique message ID."
+					}
+				},
+				"updateRemoteBridge(address)": {
+					"details": "Updates configuration parameters."
+				}
+			},
+			"title": "TokenBridge",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"RUSD-Bridge-MaalChain/TokenBridge.sol": "TokenBridge"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"RUSD-Bridge-MaalChain/AccessControl.sol": {
+			"keccak256": "0x2f8850bb8333bbe4c4b6c455e2f0903e4ef8cc621bf2353a6de6b8bd9691c5b2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7e2fdd2dfe1079477e57e25c371123c46f8a92e1dc41a9b150da5c691e0a8c4a",
+				"dweb:/ipfs/QmTy1KS9CyNUJQX3gPqBNN2uZ35yVZXSc5MwrymL1r4VPC"
+			]
+		},
+		"RUSD-Bridge-MaalChain/Address.sol": {
+			"keccak256": "0x11af1067f54637ed0d29e3ad2dbc05deec9b23a6fc162dd4a8b3fbd33781ba57",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://dacc65e26db7d9c2f8b7d1bc75e143ac85fb021a4587eeb0c81e974095b6ef0b",
+				"dweb:/ipfs/QmPgAcAYNeW8D9z49P7VW21Xs94FPoUuMsB1Rt5nqjcg21"
+			]
+		},
+		"RUSD-Bridge-MaalChain/Context.sol": {
+			"keccak256": "0x305a23fe85a11c00df1a504d64f1390400bbd4b9d8130d7a11cd60d1f7e55e67",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://685be1be3346261bc8414d175f153c87cc428c4768aec45a553681e9e5ce242d",
+				"dweb:/ipfs/QmarFuPXjBw6gT3MkEj1rZj45dbEkkPXrxwAsvxD9voP36"
+			]
+		},
+		"RUSD-Bridge-MaalChain/ERC165.sol": {
+			"keccak256": "0x83e7a6d7614c5d2ca852b77a937f40cdc6832b3c9bf4504607824ca49536bde0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://cc9f9ec4495f7a5f630a7570c0d3795a289e1ffd83f0b47d98aa60d8f1d7f2e1",
+				"dweb:/ipfs/QmWYrJUkeJsYniH9jwt8k4v3XqJ8vkaY7TiTX3fj5hdjVT"
+			]
+		},
+		"RUSD-Bridge-MaalChain/Errors.sol": {
+			"keccak256": "0xccb0653ac1441816f0d77a415f1c07335f2992f25d0e1f9c90c8ada7489970ba",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://023a7cd77cd9c887751ad1790b04cb302f6b556d58a90aeb0753445a92173c8c",
+				"dweb:/ipfs/QmTiZ6sXuYGBodLVaMZ1oVF2PddQ2usNpiQNJHPgVP2MMr"
+			]
+		},
+		"RUSD-Bridge-MaalChain/IAccessControl.sol": {
+			"keccak256": "0x39f1c75f7ae3f2729ffbb15c80f9e950fbe1c997074d343c62d73f3fc864bc54",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8a3c7ee81e81f0ec8847d00f97a73d75bdcb9f3ef600fd585f34ef9a27c78a97",
+				"dweb:/ipfs/QmXzueUpzWuca2dKeQ9DbjKuTNVHKYT96eoH12bZC2ZiLm"
+			]
+		},
+		"RUSD-Bridge-MaalChain/IERC1363.sol": {
+			"keccak256": "0xf7e43525e899047c7c06f43ab3f9e3180f292a65f79abd5727cacf65dbb3c0b3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://641cbdad4c08e758e54d49e8a310ce5c38be2ae87d5e703116d18b71978cdbb6",
+				"dweb:/ipfs/QmaXVsg9MjXZ9iNRVhf3sUvAXHMXQR4YvjyBc68Uc8BeXt"
+			]
+		},
+		"RUSD-Bridge-MaalChain/IERC165.sol": {
+			"keccak256": "0xe210951fd55bdea7877fe678aca7241a511b5405be2379a127628117e488f569",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b5af04ab6d4a256b5a11a0025132d73564666e4d1a389ea7fced7bf071a08ce1",
+				"dweb:/ipfs/QmQfrUiQPL22Nib3Q12FqJtGhxGq1kCrZyopYNMRENtUtn"
+			]
+		},
+		"RUSD-Bridge-MaalChain/IERC20.sol": {
+			"keccak256": "0x40b023011508dd11d609419d2d68b0a1695afa480dd0a37cd0c4c449e84be028",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a312f5cf92f661c026bc64244e2c1a9b8c9a52e4475b61760acd423a3e061ef1",
+				"dweb:/ipfs/QmZSkkEX2BBBosB6uFivLAwWH6snSpvKWT7hpgfZ3DhoDo"
+			]
+		},
+		"RUSD-Bridge-MaalChain/Pausable.sol": {
+			"keccak256": "0xa3d4f3e92e25b2426c63264d31c646cff4dfce7e7b652849d5cde46e04413938",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://96cf6b7e333debd6c2a84ef38229c3a573bf15c82cae05d9f20d18c91c2a9c80",
+				"dweb:/ipfs/QmbPtovjiN1VWm8hrpAovqXPBMzhq4G9XHRhskA3hS96vJ"
+			]
+		},
+		"RUSD-Bridge-MaalChain/ReentrancyGuard.sol": {
+			"keccak256": "0x79faea8a0af68ea11c0ce19c379f41b7a4106f7c19745733f71628a1c33dbe54",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a275e62e5bff8756bb0e0441aefe4e9ff4a471a91e6da585bdd643c905bcdfcf",
+				"dweb:/ipfs/QmWS4Hs4TxGHLKgMoHdJePao6xu8tDvguvaarzagHourLK"
+			]
+		},
+		"RUSD-Bridge-MaalChain/SafeERC20.sol": {
+			"keccak256": "0xa5468fd7dd662db14cf62a0be22c85af3b0f04692f216a047b67afb4386bc8b1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0de8930815c3b8459d2a5ee4a331fd55e578cef308db3129fd36c605923195a9",
+				"dweb:/ipfs/QmWEqdzvLZXVofnH8a9QHgRXS9cixZsQte8qfD1P4df2BH"
+			]
+		},
+		"RUSD-Bridge-MaalChain/TokenBridge.sol": {
+			"keccak256": "0x0e5fcea2996d8705416aeacb5257c67eaf2e858a274b69ac6987d3a796417c65",
+			"license": "AGPL-3.0-or-later",
+			"urls": [
+				"bzz-raw://bdc475d32b97850e5226e2b4dcb8291f3ef897c2f13ee2d4b9d394c6c0b7525e",
+				"dweb:/ipfs/QmYmn8ePnx9dMnCBW4SJno5KKVA4wUkcMFv2rQAgDkv92k"
+			]
+		}
+	},
+	"version": 1
+}

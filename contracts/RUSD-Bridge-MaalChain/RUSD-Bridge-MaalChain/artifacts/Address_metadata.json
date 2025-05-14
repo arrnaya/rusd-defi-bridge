@@ -1,0 +1,73 @@
+{
+	"compiler": {
+		"version": "0.8.17+commit.8df45f5f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "target",
+						"type": "address"
+					}
+				],
+				"name": "AddressEmptyCode",
+				"type": "error"
+			}
+		],
+		"devdoc": {
+			"details": "Collection of functions related to the address type",
+			"errors": {
+				"AddressEmptyCode(address)": [
+					{
+						"details": "There's no code at `target` (it is not a contract)."
+					}
+				]
+			},
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"RUSD-Bridge-MaalChain/Address.sol": "Address"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"RUSD-Bridge-MaalChain/Address.sol": {
+			"keccak256": "0x11af1067f54637ed0d29e3ad2dbc05deec9b23a6fc162dd4a8b3fbd33781ba57",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://dacc65e26db7d9c2f8b7d1bc75e143ac85fb021a4587eeb0c81e974095b6ef0b",
+				"dweb:/ipfs/QmPgAcAYNeW8D9z49P7VW21Xs94FPoUuMsB1Rt5nqjcg21"
+			]
+		},
+		"RUSD-Bridge-MaalChain/Errors.sol": {
+			"keccak256": "0xccb0653ac1441816f0d77a415f1c07335f2992f25d0e1f9c90c8ada7489970ba",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://023a7cd77cd9c887751ad1790b04cb302f6b556d58a90aeb0753445a92173c8c",
+				"dweb:/ipfs/QmTiZ6sXuYGBodLVaMZ1oVF2PddQ2usNpiQNJHPgVP2MMr"
+			]
+		}
+	},
+	"version": 1
+}

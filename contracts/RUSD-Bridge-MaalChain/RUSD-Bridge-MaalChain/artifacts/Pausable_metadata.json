@@ -1,0 +1,128 @@
+{
+	"compiler": {
+		"version": "0.8.17+commit.8df45f5f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "EnforcedPause",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "ExpectedPause",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Paused",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Unpaused",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "paused",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "Contract module which allows children to implement an emergency stop mechanism that can be triggered by an authorized account. This module is used through inheritance. It will make available the modifiers `whenNotPaused` and `whenPaused`, which can be applied to the functions of your contract. Note that they will not be pausable by simply including this module, only once the modifiers are put in place.",
+			"errors": {
+				"EnforcedPause()": [
+					{
+						"details": "The operation failed because the contract is paused."
+					}
+				],
+				"ExpectedPause()": [
+					{
+						"details": "The operation failed because the contract is not paused."
+					}
+				]
+			},
+			"events": {
+				"Paused(address)": {
+					"details": "Emitted when the pause is triggered by `account`."
+				},
+				"Unpaused(address)": {
+					"details": "Emitted when the pause is lifted by `account`."
+				}
+			},
+			"kind": "dev",
+			"methods": {
+				"paused()": {
+					"details": "Returns true if the contract is paused, and false otherwise."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"RUSD-Bridge-MaalChain/Pausable.sol": "Pausable"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"RUSD-Bridge-MaalChain/Context.sol": {
+			"keccak256": "0x305a23fe85a11c00df1a504d64f1390400bbd4b9d8130d7a11cd60d1f7e55e67",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://685be1be3346261bc8414d175f153c87cc428c4768aec45a553681e9e5ce242d",
+				"dweb:/ipfs/QmarFuPXjBw6gT3MkEj1rZj45dbEkkPXrxwAsvxD9voP36"
+			]
+		},
+		"RUSD-Bridge-MaalChain/Pausable.sol": {
+			"keccak256": "0xa3d4f3e92e25b2426c63264d31c646cff4dfce7e7b652849d5cde46e04413938",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://96cf6b7e333debd6c2a84ef38229c3a573bf15c82cae05d9f20d18c91c2a9c80",
+				"dweb:/ipfs/QmbPtovjiN1VWm8hrpAovqXPBMzhq4G9XHRhskA3hS96vJ"
+			]
+		}
+	},
+	"version": 1
+}
