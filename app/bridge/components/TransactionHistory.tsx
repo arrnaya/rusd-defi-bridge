@@ -10,8 +10,9 @@ import {
   TableRow,
   Chip,
 } from '@mui/material';
-import { Transaction, CHAINS, TOKENS } from '../../../lib/constants';
+import { CHAINS, TOKENS } from '../../../lib/constants';
 import { ethers } from 'ethers';
+import { Transaction } from '@/types';
 
 export default function TransactionHistory() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
