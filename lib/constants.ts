@@ -123,7 +123,7 @@ export const TOKEN_BRIDGE_ADDRESSES: Record<number, Address> = {
     // 56: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_BSC_MAIN! as Address,
     97: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_BSC! as Address,
     // 17000: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_HOLESKY! as Address,
-    7863: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL! as Address,
+    // 7863: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL! as Address,
     7862: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL_MAIN! as Address,
 };
 
@@ -132,7 +132,7 @@ if (
     !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_BSC ||
     // !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_HOLESKY ||
     // !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_BSC_MAIN ||
-    !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL ||
+    // !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL ||
     !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL_MAIN
 ) {
     console.warn('Missing TokenBridge contract addresses in environment variables');
