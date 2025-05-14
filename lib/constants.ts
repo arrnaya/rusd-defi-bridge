@@ -23,7 +23,7 @@ export const CHAINS: Chains[] = [
         network: 'bsc-testnet',
         nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
         rpcUrls: {
-            default: { http: ['https://data-seed-prebsc-2-s1.bnbchain.org:8545/'] },
+            default: { http: ['https://bsc-testnet.infura.io/v3/22246f0ab774481f8a2939dd236ee973/'] },
             public: { http: ['https://data-seed-prebsc-1-s1.binance.org:8545/'] },
         },
         blockExplorers: {
