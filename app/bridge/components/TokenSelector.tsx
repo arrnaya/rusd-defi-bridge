@@ -1,5 +1,6 @@
 import { FormControl, InputLabel, Select, MenuItem, Box } from '@mui/material';
-import { TOKENS, Token } from '../../../lib/constants';
+import { TOKENS } from '../../../lib/constants';
+import { Token } from '@/types';
 
 interface TokenSelectorProps {
   label: string;
