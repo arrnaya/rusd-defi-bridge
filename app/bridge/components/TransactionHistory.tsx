@@ -78,12 +78,11 @@ export default function TransactionHistory() {
               const recipient = decodedData[0]; // recipient
               const tokenAddress = decodedData[1]; // token
               const amount = decodedData[2].toString(); // value
-              const toChainId =
-                CHAINS.find(
-                  c =>
-                    c.id !== chain.id &&
-                    TOKEN_BRIDGE_ADDRESSES[c.id]?.toLowerCase() === log.args.target.toLowerCase()
-                )?.id || chain.id;
+              const toChainId = CHAINS.find(
+                c =>
+                  c.id !== chain.id &&
+                  TOKEN_BRIDGE_ADDRESSES[c.id]?.toLowerCase() === (log.args.target as string).toLowerCase()
+              )?.id || chain.id;
 
               newTransactions.push({
                 id: log.args.messageId,
