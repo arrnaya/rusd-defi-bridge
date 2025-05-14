@@ -1,9 +1,9 @@
 // lib/wagmi.tsx
 import { WagmiProvider, createConfig, http } from 'wagmi';
-import { bsc, bscTestnet } from '@wagmi/chains';
+import { bsc, bscTestnet, Chain } from '@wagmi/chains';
 import { injected } from 'wagmi/connectors';
 import { ReactNode } from 'react';
-import type { Chain } from 'wagmi';
+// import type { Chain } from 'wagmi';
 
 // Define MaalChain Testnet
 const maalChainTestnet: Chain = {
