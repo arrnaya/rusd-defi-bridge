@@ -89,7 +89,7 @@ export const wagmiConfig = createConfig({
   connectors: [injected({ target: 'metaMask' })],
   transports: {
     [bsc.id]: http('https://bsc-dataseed1.binance.org/'),
-    [bscTestnet.id]: http('https://bsc-testnet.infura.io/v3/22246f0ab774481f8a2939dd236ee973/'),
+    [bscTestnet.id]: http(`https://bsc-testnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_KEY}/`),
     [holesky.id]: http('https://holesky.gateway.tenderly.co/'),
     [maalChainTestnet.id]: http('https://node-testnet.maalscan.io/'),
     [maalChainV2.id]: http('https://node1-mainnet-new.maalscan.io/'),

@@ -1,6 +1,9 @@
 import { Chains, Token } from '@/types';
 import { Address } from 'viem';
 
+const Infura_key = process.env.NEXT_PUBLIC_INFURA_KEY;
+console.log(Infura_key,"Infura Key");
+
 export const CHAINS: Chains[] = [
     // {
     //     id: 7863,
@@ -23,7 +26,7 @@ export const CHAINS: Chains[] = [
         network: 'bsc-testnet',
         nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
         rpcUrls: {
-            default: { http: ['https://bsc-testnet.infura.io/v3/22246f0ab774481f8a2939dd236ee973/'] },
+            default: { http: [`https://bsc-testnet.infura.io/v3/${Infura_key}/`] },
             public: { http: ['https://data-seed-prebsc-1-s1.binance.org:8545/'] },
         },
         blockExplorers: {
