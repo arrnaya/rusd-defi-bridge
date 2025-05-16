@@ -77,7 +77,7 @@ export default function BridgeForm() {
         chainId: fromChain.id,
         query: {
             enabled: !!isValidInputs && !!TOKEN_BRIDGE_ADDRESSES[fromChain.id] && supportedChainIds.includes(fromChain.id),
-            staleTime: 60_000, // Longer stale time as fee is less likely to change
+            staleTime: 60_000,
         },
     });
 
@@ -88,8 +88,7 @@ export default function BridgeForm() {
         }
         try {
             const amountInWei = parseUnits(amount, token.decimals);
-            const feePercentage = Number(bridgeFee) / 100; // e.g., 25 / 100 = 0.25%
-            const feeInWei = (amountInWei * BigInt(bridgeFee)) / BigInt(10000); // 10000 basis points = 100%
+            const feeInWei = BigInt((Number(amountInWei) * (Number(bridgeFee))) / 10000); // 10000 basis points = 100%
             if (amountInWei <= feeInWei) {
                 return '0';
             }
@@ -387,6 +386,7 @@ export default function BridgeForm() {
                             }
                             error={!!balanceError || !!bridgeBalanceError || !!bridgeFeeError}
                         />
+                        <Tooltip title="A 0.25% fee is charged by the TokenBridge contract for cross-chain transfers.">
                         <TextField
                             label="Receivable Amount"
                             disabled
@@ -403,6 +403,7 @@ export default function BridgeForm() {
                             }
                             error={!!bridgeFeeError}
                         />
+                        </Tooltip>
                         {(balanceError || bridgeBalanceError || bridgeFeeError) && (
                             <Button
                                 variant="outlined"
