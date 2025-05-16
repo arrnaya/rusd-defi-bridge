@@ -57,7 +57,6 @@ export default function BridgeForm() {
         },
     });
 
-    // Fetch TokenBridge contract balance
     // Fetch TokenBridge contract balance on toChain
     const toToken = TOKENS.find(t => t.chainId === toChain.id);
     const { data: bridgeBalance, isLoading: bridgeBalanceLoading, error: bridgeBalanceError, refetch: refetchBridgeBalance } = useBalance({
@@ -69,6 +68,40 @@ export default function BridgeForm() {
             staleTime: 30_000,
         },
     });
+
+    // Fetch bridge fee from TokenBridge contract
+    const { data: bridgeFee, isLoading: bridgeFeeLoading, error: bridgeFeeError, refetch: refetchBridgeFee } = useReadContract({
+        address: TOKEN_BRIDGE_ADDRESSES[fromChain.id] as Address,
+        abi: TokenBridgeABI,
+        functionName: 'bridgeFee',
+        chainId: fromChain.id,
+        query: {
+            enabled: !!isValidInputs && !!TOKEN_BRIDGE_ADDRESSES[fromChain.id] && supportedChainIds.includes(fromChain.id),
+            staleTime: 60_000, // Longer stale time as fee is less likely to change
+        },
+    });
+
+    // Calculate receivable amount
+    const calculateReceivableAmount = () => {
+        if (!amount || parseFloat(amount) <= 0 || !token || bridgeFee === undefined) {
+            return '0';
+        }
+        try {
+            const amountInWei = parseUnits(amount, token.decimals);
+            const feePercentage = Number(bridgeFee) / 100; // e.g., 25 / 100 = 0.25%
+            const feeInWei = (amountInWei * BigInt(bridgeFee)) / BigInt(10000); // 10000 basis points = 100%
+            if (amountInWei <= feeInWei) {
+                return '0';
+            }
+            const receivableInWei = amountInWei - feeInWei;
+            return formatUnits(receivableInWei, token.decimals);
+        } catch (err) {
+            console.error('Error calculating receivable amount:', err);
+            return '0';
+        }
+    };
+
+    const receivableAmount = calculateReceivableAmount();
 
     // Check allowance for TokenBridge contract
     const { data: allowance, refetch: refetchAllowance } = useReadContract({
@@ -336,33 +369,52 @@ export default function BridgeForm() {
                             onChange={(e) => setAmount(e.target.value)}
                             fullWidth
                             helperText={
-                                balanceLoading || bridgeBalanceLoading
-                                    ? 'Loading balances...'
+                                balanceLoading || bridgeBalanceLoading || bridgeFeeLoading
+                                    ? 'Loading balances and fees...'
                                     : balanceError
                                         ? `Error fetching balance: ${balanceError.message}`
                                         : bridgeBalanceError
                                             ? `Error fetching bridge balance on ${toChain.name}: ${bridgeBalanceError.message}`
-                                            : balance && bridgeBalance && token && toToken
-                                                ? `User Balance: ${formatUnits(balance.value, token.decimals)} RUSD | Bridge Balance on ${toChain.name}: ${formatUnits(bridgeBalance.value, toToken.decimals)} RUSD`
-                                                : !isValidInputs
-                                                    ? 'Connect wallet to view balances'
-                                                    : !toToken
-                                                        ? `RUSD token not available on ${toChain.name}`
-                                                        : 'Balances unavailable'
+                                            : bridgeFeeError
+                                                ? `Error fetching bridge fee: ${bridgeFeeError.message}`
+                                                : balance && bridgeBalance && token && toToken && bridgeFee !== undefined
+                                                    ? `User Balance: ${formatUnits(balance.value, token.decimals)} RUSD | Bridge Balance on ${toChain.name}: ${formatUnits(bridgeBalance.value, toToken.decimals)} RUSD`
+                                                    : !isValidInputs
+                                                        ? 'Connect wallet to view balances'
+                                                        : !toToken
+                                                            ? `RUSD token not available on ${toChain.name}`
+                                                            : 'Balances or fee unavailable'
                             }
-                            error={!!balanceError || !!bridgeBalanceError}
+                            error={!!balanceError || !!bridgeBalanceError || !!bridgeFeeError}
                         />
-                        {(balanceError || bridgeBalanceError) && (
+                        <TextField
+                            label="Receivable Amount"
+                            disabled
+                            value={bridgeFeeLoading ? 'Loading...' : receivableAmount}
+                            fullWidth
+                            helperText={
+                                bridgeFeeLoading
+                                    ? 'Fetching bridge fee...'
+                                    : bridgeFeeError
+                                        ? 'Error fetching bridge fee'
+                                        : bridgeFee !== undefined && token
+                                            ? `After ${Number(bridgeFee) / 100}% bridge fee`
+                                            : 'Fee unavailable'
+                            }
+                            error={!!bridgeFeeError}
+                        />
+                        {(balanceError || bridgeBalanceError || bridgeFeeError) && (
                             <Button
                                 variant="outlined"
                                 size="small"
                                 onClick={() => {
                                     refetchBalance();
                                     refetchBridgeBalance();
+                                    refetchBridgeFee();
                                 }}
                                 sx={{ mt: 1 }}
                             >
-                                Retry Balances
+                                Retry Balances and Fee
                             </Button>
                         )}
                         <TextField
