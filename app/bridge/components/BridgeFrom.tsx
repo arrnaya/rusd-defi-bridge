@@ -23,7 +23,6 @@ import ChainSelector from './ChainSelector';
 import { CHAINS, TOKEN_BRIDGE_ADDRESSES, TOKENS } from '../../../lib/constants';
 import TokenBridgeABI from '../../../contracts/TokenBridge.json';
 import ERC20ABI from '../../../contracts/ERC20ABI.json';
-import { ethers } from 'ethers';
 import { Address } from 'viem';
 
 export default function BridgeForm() {
@@ -250,7 +249,7 @@ export default function BridgeForm() {
                 abi: TokenBridgeABI,
                 address: TOKEN_BRIDGE_ADDRESSES[fromChain.id],
                 functionName: 'transferToken',
-                args: [recipient as Address, token.address, amountInWei],
+                args: [toChain.id, recipient as Address, token.address, amountInWei],
             });
             setAmount('');
             setRecipient(address || '');

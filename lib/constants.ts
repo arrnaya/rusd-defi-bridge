@@ -2,23 +2,22 @@ import { Chains, Token } from '@/types';
 import { Address } from 'viem';
 
 const Infura_key = process.env.NEXT_PUBLIC_INFURA_KEY;
-console.log(Infura_key,"Infura Key");
 
 export const CHAINS: Chains[] = [
-    // {
-    //     id: 7863,
-    //     name: 'MaalChain Testnet',
-    //     logo: '/chains/maalchain.avif',
-    //     network: 'maalchain-testnet',
-    //     nativeCurrency: { name: 'Maal', symbol: 'MAAL', decimals: 18 },
-    //     rpcUrls: {
-    //         default: { http: ['https://node-testnet.maalscan.io'] },
-    //         public: { http: ['https://node-testnet.maalscan.io'] },
-    //     },
-    //     blockExplorers: {
-    //         default: { name: 'MaalScan', url: 'https://new-testnet.maalscan.io/' },
-    //     },
-    // },
+    {
+        id: 7863,
+        name: 'MaalChain Testnet',
+        logo: '/chains/maalchain.avif',
+        network: 'maalchain-testnet',
+        nativeCurrency: { name: 'Maal', symbol: 'MAAL', decimals: 18 },
+        rpcUrls: {
+            default: { http: ['https://node-testnet.maalscan.io'] },
+            public: { http: ['https://node-testnet.maalscan.io'] },
+        },
+        blockExplorers: {
+            default: { name: 'MaalScan', url: 'https://new-testnet.maalscan.io/' },
+        },
+    },
     {
         id: 97,
         name: 'BSC Testnet',
@@ -33,20 +32,20 @@ export const CHAINS: Chains[] = [
             default: { name: 'BscScan', url: 'https://testnet.bscscan.com' },
         },
     },
-    {
-        id: 7862,
-        name: 'MaalChain V2',
-        logo: '/chains/maalchain.avif',
-        network: 'maalchain-v2',
-        nativeCurrency: { name: 'Maal', symbol: 'MAAL', decimals: 18 },
-        rpcUrls: {
-            default: { http: ['https://node1-mainnet-new.maalscan.io'] },
-            public: { http: ['https://node1-mainnet-new.maalscan.io'] },
-        },
-        blockExplorers: {
-            default: { name: 'MaalScan', url: 'https://v2.maalscan.io/' },
-        },
-    },
+    // {
+    //     id: 7862,
+    //     name: 'MaalChain V2',
+    //     logo: '/chains/maalchain.avif',
+    //     network: 'maalchain-v2',
+    //     nativeCurrency: { name: 'Maal', symbol: 'MAAL', decimals: 18 },
+    //     rpcUrls: {
+    //         default: { http: ['https://node1-mainnet-new.maalscan.io'] },
+    //         public: { http: ['https://node1-mainnet-new.maalscan.io'] },
+    //     },
+    //     blockExplorers: {
+    //         default: { name: 'MaalScan', url: 'https://v2.maalscan.io/' },
+    //     },
+    // },
     // {
     //     id: 56,
     //     name: 'BSC Mainnet',
@@ -85,13 +84,13 @@ export const TOKENS: Token[] = [
         decimals: 18,
         chainId: 97,
     },
-    // {
-    //     address: '0xaCcfdB7767ddcF5f088ec9B8d726A76b29BAB768' as Address,
-    //     symbol: 'RUSD',
-    //     name: 'Royal Dollar',
-    //     decimals: 18,
-    //     chainId: 7863,
-    // },
+    {
+        address: '0xaCcfdB7767ddcF5f088ec9B8d726A76b29BAB768' as Address,
+        symbol: 'RUSD',
+        name: 'Royal Dollar',
+        decimals: 18,
+        chainId: 7863,
+    },
     // {
     //     address: '0x6b3b95B0c84f35c9c505fff8C2F35Ee2e502a44D' as Address,
     //     symbol: 'RUSD',
@@ -99,13 +98,13 @@ export const TOKENS: Token[] = [
     //     decimals: 18,
     //     chainId: 56, // BSC Mainnet
     // },
-    {
-        address: '0x49561Eb00e1E2Ff7a3E2a7c9664cEAa2Ce365a10' as Address,
-        symbol: 'RUSD',
-        name: 'Royal Dollar',
-        decimals: 18,
-        chainId: 7862, // MaalChain V2
-    }
+    // {
+    //     address: '0x49561Eb00e1E2Ff7a3E2a7c9664cEAa2Ce365a10' as Address,
+    //     symbol: 'RUSD',
+    //     name: 'Royal Dollar',
+    //     decimals: 18,
+    //     chainId: 7862, // MaalChain V2
+    // }
     // {
     //     address: '0xaCcfdB7767ddcF5f088ec9B8d726A76b29BAB768' as Address,
     //     symbol: 'USDT',
@@ -126,8 +125,8 @@ export const TOKEN_BRIDGE_ADDRESSES: Record<number, Address> = {
     // 56: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_BSC_MAIN! as Address,
     97: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_BSC! as Address,
     // 17000: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_HOLESKY! as Address,
-    // 7863: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL! as Address,
-    7862: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL_MAIN! as Address,
+    7863: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL! as Address,
+    // 7862: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL_MAIN! as Address,
 };
 
 // Validate environment variables
@@ -135,8 +134,8 @@ if (
     !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_BSC ||
     // !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_HOLESKY ||
     // !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_BSC_MAIN ||
-    // !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL ||
-    !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL_MAIN
+    !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL
+    // !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL_MAIN
 ) {
     console.warn('Missing TokenBridge contract addresses in environment variables');
 }
