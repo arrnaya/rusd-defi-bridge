@@ -69,7 +69,7 @@ const holesky: Chain = {
   },
   rpcUrls: {
     default: {
-      http: ['https://node1-mainnet-new.maalscan.io'],
+      http: [`${process.env.NEXT_PUBLIC_CHAIN_HOLESKY_RPC_URL}`],
     },
     public: {
       http: ['https://1rpc.io/holesky'],
@@ -89,8 +89,8 @@ export const wagmiConfig = createConfig({
   connectors: [injected({ target: 'metaMask' })],
   transports: {
     [bsc.id]: http('https://bsc-dataseed1.binance.org/'),
-    [bscTestnet.id]: http(`https://bsc-testnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_KEY}/`),
-    [holesky.id]: http('https://holesky.gateway.tenderly.co/'),
+    [bscTestnet.id]: http(`${process.env.NEXT_PUBLIC_BSC_TESTNET_QUICKNODE_URL}/`),
+    [holesky.id]: http(`${process.env.NEXT_PUBLIC_CHAIN_HOLESKY_RPC_URL}`),
     [maalChainTestnet.id]: http('https://node-testnet.maalscan.io/'),
     [maalChainV2.id]: http('https://node1-mainnet-new.maalscan.io/'),
   },

@@ -1,5 +1,5 @@
 'use client';
-
+import dynamic from 'next/dynamic';
 import { useCallback, useState, useEffect } from 'react';
 import {
     Card,
@@ -18,12 +18,14 @@ import {
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { useAccount, useBalance, useConnect, useReadContract, useWriteContract, useSwitchChain, useChainId, useWalletClient } from 'wagmi';
 import { injected } from 'wagmi/connectors';
-import { parseUnits, isAddress, formatUnits } from 'viem';
 import ChainSelector from './ChainSelector';
 import { CHAINS, TOKEN_BRIDGE_ADDRESSES, TOKENS } from '../../../lib/constants';
 import TokenBridgeABI from '../../../contracts/TokenBridge.json';
 import ERC20ABI from '../../../contracts/ERC20ABI.json';
-import { Address } from 'viem';
+import { Address, encodeFunctionData, parseUnits, isAddress, formatUnits } from 'viem';
+
+// Dynamically import Chip to avoid SSR
+const DynamicChip = dynamic(() => import('@mui/material').then(mod => mod.Chip), { ssr: false });
 
 export default function BridgeForm() {
     const { address, isConnected } = useAccount();
@@ -40,6 +42,12 @@ export default function BridgeForm() {
     const [loading, setLoading] = useState(false);
     const [needsChainAdd, setNeedsChainAdd] = useState(false);
     const [needsChainSwitch, setNeedsChainSwitch] = useState(false);
+    const [isClient, setIsClient] = useState(false);
+
+    // Set isClient to true after mounting
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     // Select RUSD token for the current fromChain
     const token = TOKENS.find(t => t.chainId === fromChain.id);
@@ -71,13 +79,15 @@ export default function BridgeForm() {
 
     // Fetch bridge fee from TokenBridge contract
     const { data: bridgeFee, isLoading: bridgeFeeLoading, error: bridgeFeeError, refetch: refetchBridgeFee } = useReadContract({
-        address: TOKEN_BRIDGE_ADDRESSES[fromChain.id] as Address,
+        address: TOKEN_BRIDGE_ADDRESSES[fromChain.id] as `0x${string}`,
         abi: TokenBridgeABI,
         functionName: 'bridgeFee',
         chainId: fromChain.id,
         query: {
             enabled: !!isValidInputs && !!TOKEN_BRIDGE_ADDRESSES[fromChain.id] && supportedChainIds.includes(fromChain.id),
             staleTime: 60_000,
+            // Add block range limit
+            // blockTag: 'latest', // Use latest block instead of a range
         },
     });
 
@@ -263,34 +273,104 @@ export default function BridgeForm() {
         setError(null);
         setLoading(true);
 
+        // Define amountInWei early
+        let amountInWei;
         try {
-            const amountInWei = parseUnits(amount, token.decimals);
+            amountInWei = parseUnits(amount, token.decimals);
+        } catch (err) {
+            setError('Invalid amount format');
+            setLoading(false);
+            return;
+        }
 
+        try {
+            // Prepare calls for EIP-7702 transaction
+            const calls = [];
+
+            // Add approve call if allowance is insufficient
             if (!allowance || BigInt(Number(allowance)) < amountInWei) {
-                await approveToken({
-                    abi: ERC20ABI,
-                    address: token.address as Address,
-                    functionName: 'approve',
-                    args: [TOKEN_BRIDGE_ADDRESSES[fromChain.id] as Address, amountInWei],
+                calls.push({
+                    contractAddress: token.address as `0x${string}`,
+                    callData: encodeFunctionData({
+                        abi: ERC20ABI,
+                        functionName: 'approve',
+                        args: [TOKEN_BRIDGE_ADDRESSES[fromChain.id], amountInWei],
+                    }) as `0x${string}`,
                 });
-                setSuccessMessage('Approval successful! Proceeding with transfer...');
-                await refetchAllowance();
             }
 
-            await transferToken({
-                abi: TokenBridgeABI,
-                address: TOKEN_BRIDGE_ADDRESSES[fromChain.id],
-                functionName: 'transferToken',
-                args: [toChain.id, recipient as Address, token.address, amountInWei],
+            // Add transferToken call
+            calls.push({
+                contractAddress: TOKEN_BRIDGE_ADDRESSES[fromChain.id] as `0x${string}`,
+                callData: encodeFunctionData({
+                    abi: TokenBridgeABI,
+                    functionName: 'transferToken',
+                    args: [toChain.id, recipient, token.address, amountInWei],
+                }) as `0x${string}`,
             });
+
+            // Construct EIP-7702 transaction
+            const transaction = {
+                from: address as `0x${string}`,
+                to: TOKEN_BRIDGE_ADDRESSES[fromChain.id] as `0x${string}`,
+                data: '0x' as `0x${string}`,
+                chainId: `0x${fromChain.id.toString(16)}`,
+                type: '0x04' as const, // EIP-7702 transaction type
+                authorizationList: calls,
+                gas: '0x' + (300000).toString(16), // Adjust based on testing
+                maxFeePerGas: '0x' + parseUnits('100', 9).toString(16), // 100 gwei
+                maxPriorityFeePerGas: '0x' + parseUnits('2', 9).toString(16), // 2 gwei
+            };
+
+            // Send transaction using walletClient
+            if (!walletClient) {
+                throw new Error('Wallet client not available');
+            }
+
+            // Type assertion to bypass TypeScript if viem doesn't support authorizationList
+            const txHash = await walletClient.request({
+                method: 'eth_sendTransaction',
+                params: [transaction as any], // Use 'any' as a fallback; replace with proper type if viem supports EIP-7702
+            });
+
             setAmount('');
             setRecipient(address || '');
-            setError(null);
-            setSuccessMessage('Transaction successful!');
-            refetchBalance();
-            refetchBridgeBalance();
+            setSuccessMessage(`Transaction successful! Tx Hash: ${txHash}`);
+            await Promise.all([refetchBalance(), refetchBridgeBalance(), refetchAllowance()]);
         } catch (err: any) {
-            setError(err.message || 'Transaction failed');
+            console.error('EIP-7702 transaction error:', err);
+            // Fallback to sequential calls
+            if (err.code === 'UNSUPPORTED_OPERATION' || err.message.includes('EIP-7702')) {
+                console.warn('EIP-7702 not supported, falling back to sequential calls');
+                setSuccessMessage('EIP-7702 not supported, processing with separate approval and transfer...');
+                try {
+                    if (!allowance || BigInt(Number(allowance)) < amountInWei) {
+                        await approveToken({
+                            abi: ERC20ABI,
+                            address: token.address as `0x${string}`,
+                            functionName: 'approve',
+                            args: [TOKEN_BRIDGE_ADDRESSES[fromChain.id], amountInWei],
+                        });
+                        setSuccessMessage('Approval successful! Proceeding with transfer...');
+                        await refetchAllowance();
+                    }
+
+                    await transferToken({
+                        abi: TokenBridgeABI,
+                        address: TOKEN_BRIDGE_ADDRESSES[fromChain.id] as `0x${string}`,
+                        functionName: 'transferToken',
+                        args: [toChain.id, recipient, token.address, amountInWei],
+                    });
+                    setAmount('');
+                    setRecipient(address || '');
+                    setSuccessMessage('Transaction successful!');
+                    await Promise.all([refetchBalance(), refetchBridgeBalance()]);
+                } catch (fallbackErr: any) {
+                    setError(fallbackErr.message || 'Transaction failed');
+                }
+            } else {
+                setError(err.message || 'Transaction failed');
+            }
         } finally {
             setLoading(false);
         }
@@ -303,8 +383,8 @@ export default function BridgeForm() {
 
     return (
         <Box sx={{ position: 'relative', maxWidth: 860, mx: 'auto', py: 2 }}>
-            {isConnected && address && (
-                <Chip
+            {isClient && isConnected && address && (
+                <DynamicChip
                     label={formatAddress(address)}
                     color="primary"
                     sx={{
@@ -387,22 +467,22 @@ export default function BridgeForm() {
                             error={!!balanceError || !!bridgeBalanceError || !!bridgeFeeError}
                         />
                         <Tooltip title="A 0.25% fee is charged by the TokenBridge contract for cross-chain transfers.">
-                        <TextField
-                            label="Receivable Amount"
-                            disabled
-                            value={bridgeFeeLoading ? 'Loading...' : receivableAmount}
-                            fullWidth
-                            helperText={
-                                bridgeFeeLoading
-                                    ? 'Fetching bridge fee...'
-                                    : bridgeFeeError
-                                        ? 'Error fetching bridge fee'
-                                        : bridgeFee !== undefined && token
-                                            ? `After ${Number(bridgeFee) / 100}% bridge fee`
-                                            : 'Fee unavailable'
-                            }
-                            error={!!bridgeFeeError}
-                        />
+                            <TextField
+                                label="Receivable Amount"
+                                disabled
+                                value={bridgeFeeLoading ? 'Loading...' : receivableAmount}
+                                fullWidth
+                                helperText={
+                                    bridgeFeeLoading
+                                        ? 'Fetching bridge fee...'
+                                        : bridgeFeeError
+                                            ? 'Error fetching bridge fee'
+                                            : bridgeFee !== undefined && token
+                                                ? `After ${Number(bridgeFee) / 100}% bridge fee`
+                                                : 'Fee unavailable'
+                                }
+                                error={!!bridgeFeeError}
+                            />
                         </Tooltip>
                         {(balanceError || bridgeBalanceError || bridgeFeeError) && (
                             <Button

@@ -1,8 +1,6 @@
 import { Chains, Token } from '@/types';
 import { Address } from 'viem';
 
-const Infura_key = process.env.NEXT_PUBLIC_INFURA_KEY;
-
 export const CHAINS: Chains[] = [
     {
         id: 7863,
@@ -25,7 +23,7 @@ export const CHAINS: Chains[] = [
         network: 'bsc-testnet',
         nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
         rpcUrls: {
-            default: { http: [`https://bsc-testnet.infura.io/v3/${Infura_key}/`] },
+            default: { http: [`${process.env.NEXT_PUBLIC_BSC_TESTNET_QUICKNODE_URL}`] },
             public: { http: ['https://data-seed-prebsc-1-s1.binance.org:8545/'] },
         },
         blockExplorers: {
@@ -60,20 +58,20 @@ export const CHAINS: Chains[] = [
     //         default: { name: 'BscScan', url: 'https://bscscan.com' },
     //     },
     // },
-    // {
-    //     id: 17000,
-    //     name: 'Holesky Testnet',
-    //     logo: '/chains/empty-token.webp',
-    //     network: 'holesky',
-    //     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-    //     rpcUrls: {
-    //         default: { http: ['https://holesky.gateway.tenderly.co/'] },
-    //         public: { http: ['https://holesky.gateway.tenderly.co/'] },
-    //     },
-    //     blockExplorers: {
-    //         default: { name: 'Holesky-scan', url: 'https://holesky.etherscan.io/' },
-    //     },
-    // }
+    {
+        id: 17000,
+        name: 'Holesky Testnet',
+        logo: '/chains/empty-token.webp',
+        network: 'holesky',
+        nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+        rpcUrls: {
+            default: { http: [`${process.env.NEXT_PUBLIC_CHAIN_HOLESKY_RPC_URL}`] },
+            public: { http: ['https://ethereum-holesky-rpc.publicnode.com/'] },
+        },
+        blockExplorers: {
+            default: { name: 'Holesky-scan', url: 'https://holesky.etherscan.io/' },
+        },
+    }
 ];
 
 export const TOKENS: Token[] = [
@@ -105,13 +103,13 @@ export const TOKENS: Token[] = [
     //     decimals: 18,
     //     chainId: 7862, // MaalChain V2
     // }
-    // {
-    //     address: '0xaCcfdB7767ddcF5f088ec9B8d726A76b29BAB768' as Address,
-    //     symbol: 'USDT',
-    //     name: 'USD Tether',
-    //     decimals: 18,
-    //     chainId: 17000, // Holesky Testnet
-    // },
+    {
+        address: '0xaCcfdB7767ddcF5f088ec9B8d726A76b29BAB768' as Address,
+        symbol: 'USDT',
+        name: 'USD Tether',
+        decimals: 18,
+        chainId: 17000, // Holesky Testnet
+    },
     // {
     //     address: '0x49561Eb00e1E2Ff7a3E2a7c9664cEAa2Ce365a10' as Address,
     //     symbol: 'RUSD',
@@ -124,7 +122,7 @@ export const TOKENS: Token[] = [
 export const TOKEN_BRIDGE_ADDRESSES: Record<number, Address> = {
     // 56: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_BSC_MAIN! as Address,
     97: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_BSC! as Address,
-    // 17000: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_HOLESKY! as Address,
+    17000: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_HOLESKY! as Address,
     7863: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL! as Address,
     // 7862: process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL_MAIN! as Address,
 };
@@ -132,7 +130,7 @@ export const TOKEN_BRIDGE_ADDRESSES: Record<number, Address> = {
 // Validate environment variables
 if (
     !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_BSC ||
-    // !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_HOLESKY ||
+    !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_HOLESKY ||
     // !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_BSC_MAIN ||
     !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL
     // !process.env.NEXT_PUBLIC_TOKEN_BRIDGE_ADDRESS_MAAL_MAIN

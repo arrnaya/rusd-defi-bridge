@@ -23,95 +23,95 @@ import { Address } from 'viem';
 export default function TransactionHistory() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      const newTransactions: Transaction[] = [];
+  // useEffect(() => {
+  //   const fetchTransactions = async () => {
+  //     const newTransactions: Transaction[] = [];
 
-      for (const chain of CHAINS) {
-        const token = TOKENS.find(t => t.chainId === chain.id);
-        if (!token || !TOKEN_BRIDGE_ADDRESSES[chain.id]) {
-          console.warn(`Skipping chain ${chain.id} (${chain.name}): Missing token or bridge address`);
-          continue;
-        }
+  //     for (const chain of CHAINS) {
+  //       const token = TOKENS.find(t => t.chainId === chain.id);
+  //       if (!token || !TOKEN_BRIDGE_ADDRESSES[chain.id]) {
+  //         console.warn(`Skipping chain ${chain.id} (${chain.name}): Missing token or bridge address`);
+  //         continue;
+  //       }
 
-        try {
-          const publicClient = createPublicClient({
-            chain,
-            transport: http(chain.rpcUrls.default.http[0]),
-          });
+  //       try {
+  //         const publicClient = createPublicClient({
+  //           chain,
+  //           transport: http(chain.rpcUrls.default.http[0]),
+  //         });
 
-          const currentBlock = await getBlockNumber(publicClient);
-          const fromBlock = BigInt(currentBlock) - BigInt(10000); // Last ~10000 blocks
+  //         const currentBlock = await getBlockNumber(publicClient);
+  //         const fromBlock = BigInt(currentBlock) - BigInt(9000); // Last ~10000 blocks
 
-          const logs = await getLogs(publicClient, {
-            address: TOKEN_BRIDGE_ADDRESSES[chain.id] as Address,
-            event: {
-              type: 'event',
-              name: 'MessageSent',
-              inputs: [
-                { type: 'bytes32', indexed: true, name: 'messageId' },
-                { type: 'address', indexed: true, name: 'sender' },
-                { type: 'address', indexed: true, name: 'target' },
-                { type: 'bytes', indexed: false, name: 'data' },
-                { type: 'uint256', indexed: false, name: 'nonce' },
-              ],
-            },
-            fromBlock,
-            toBlock: 'latest',
-          });
+  //         const logs = await getLogs(publicClient, {
+  //           address: TOKEN_BRIDGE_ADDRESSES[chain.id] as Address,
+  //           event: {
+  //             type: 'event',
+  //             name: 'MessageSent',
+  //             inputs: [
+  //               { type: 'bytes32', indexed: true, name: 'messageId' },
+  //               { type: 'address', indexed: true, name: 'sender' },
+  //               { type: 'address', indexed: true, name: 'target' },
+  //               { type: 'bytes', indexed: false, name: 'data' },
+  //               { type: 'uint256', indexed: false, name: 'nonce' },
+  //             ],
+  //           },
+  //           fromBlock,
+  //           toBlock: 'latest',
+  //         });
 
-          const iface = new ethers.Interface(TokenBridgeABI);
-          for (const log of logs) {
-            if (
-              !log.args.messageId ||
-              !log.args.sender ||
-              !log.args.target ||
-              !log.args.data ||
-              !log.transactionHash
-            ) {
-              console.warn(`Skipping log with missing fields for chain ${chain.id}`, log);
-              continue;
-            }
+  //         const iface = new ethers.Interface(TokenBridgeABI);
+  //         for (const log of logs) {
+  //           if (
+  //             !log.args.messageId ||
+  //             !log.args.sender ||
+  //             !log.args.target ||
+  //             !log.args.data ||
+  //             !log.transactionHash
+  //           ) {
+  //             console.warn(`Skipping log with missing fields for chain ${chain.id}`, log);
+  //             continue;
+  //           }
 
-            try {
-              const decodedData = iface.decodeFunctionData('handleBridgedTokens', log.args.data);
-              const recipient = decodedData[0]; // recipient
-              const tokenAddress = decodedData[1]; // token
-              const amount = decodedData[2].toString(); // value
-              const toChainId = CHAINS.find(
-                c =>
-                  c.id !== chain.id &&
-                  TOKEN_BRIDGE_ADDRESSES[c.id]?.toLowerCase() === (log.args.target as string).toLowerCase()
-              )?.id || chain.id;
+  //           try {
+  //             const decodedData = iface.decodeFunctionData('handleBridgedTokens', log.args.data);
+  //             const recipient = decodedData[0]; // recipient
+  //             const tokenAddress = decodedData[1]; // token
+  //             const amount = decodedData[2].toString(); // value
+  //             const toChainId = CHAINS.find(
+  //               c =>
+  //                 c.id !== chain.id &&
+  //                 TOKEN_BRIDGE_ADDRESSES[c.id]?.toLowerCase() === (log.args.target as string).toLowerCase()
+  //             )?.id || chain.id;
 
-              newTransactions.push({
-                id: log.args.messageId,
-                fromChainId: chain.id,
-                toChainId,
-                tokenAddress,
-                amount,
-                recipient,
-                status: 'completed', // Adjust if relayer status is needed
-                txHash: log.transactionHash,
-                timestamp: log.blockNumber ? Number(log.blockNumber) : Date.now(),
-              });
-            } catch (decodeError) {
-              console.error(`Failed to decode log data for chain ${chain.id}:`, decodeError);
-              continue;
-            }
-          }
-        } catch (err: any) {
-          console.error(`Failed to fetch transactions for chain ${chain.name}:`, err);
-        }
-      }
+  //             newTransactions.push({
+  //               id: log.args.messageId,
+  //               fromChainId: chain.id,
+  //               toChainId,
+  //               tokenAddress,
+  //               amount,
+  //               recipient,
+  //               status: 'completed', // Adjust if relayer status is needed
+  //               txHash: log.transactionHash,
+  //               timestamp: log.blockNumber ? Number(log.blockNumber) : Date.now(),
+  //             });
+  //           } catch (decodeError) {
+  //             console.error(`Failed to decode log data for chain ${chain.id}:`, decodeError);
+  //             continue;
+  //           }
+  //         }
+  //       } catch (err: any) {
+  //         console.error(`Failed to fetch transactions for chain ${chain.name}:`, err);
+  //       }
+  //     }
 
-      setTransactions(newTransactions.sort((a, b) => b.timestamp - a.timestamp)); // Newest first
-    };
+  //     setTransactions(newTransactions.sort((a, b) => b.timestamp - a.timestamp)); // Newest first
+  //   };
 
-    fetchTransactions();
-    const interval = setInterval(fetchTransactions, 60000); // Refresh every minute
-    return () => clearInterval(interval);
-  }, []);
+  //   fetchTransactions();
+  //   const interval = setInterval(fetchTransactions, 60000); // Refresh every minute
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <Card>
